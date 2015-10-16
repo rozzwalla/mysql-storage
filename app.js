@@ -33,7 +33,7 @@ platform.once('ready', function (options) {
 		return;
 	}
 
-	tableName   = options.tablename;
+	tableName   = options.table;
 
 	connection = mysql.createConnection({
 		host     : options.host,
