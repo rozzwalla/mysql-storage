@@ -44,8 +44,8 @@ platform.once('ready', function (options) {
 
 	connection.connect(function(err) {
 		if (err) {
-			console.error('Error connecting to MySQL.', error);
-			platform.handleException(error);
+			console.error('Error connecting to MySQL.', err);
+			platform.handleException(err);
 		} else {
 			platform.log('Connected to MySQL.');
 			platform.notifyReady(); // Need to notify parent process that initialization of this plugin is done.

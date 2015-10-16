@@ -17,12 +17,16 @@
   "trailing": true, // Prohibit trailing whitespaces.
   "smarttabs": false, // Suppresses warnings about mixed tabs and spaces
   "predef": [ // Extra globals.
-	"define",
-	"require",
-	"exports",
-	"module",
-	"describe",
-	"expect"
+    "define",
+    "require",
+    "exports",
+    "module",
+    "describe",
+    "it",
+    "before",
+    "after",
+    "beforeEach",
+    "afterEach"
   ],
   "indent": 4, // Specify indentation spacing
   "devel": true, // Allow development statements e.g. `console.log();`.

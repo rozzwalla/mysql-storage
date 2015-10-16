@@ -1,6 +1,5 @@
 language: node_js
 node_js:
-  - "0.12"
-  - "0.10"
+  - "4.1.1"
 notifications:
   slack: reekoh:eFsOWQBeXXs9jKVcqiqo4Ifg

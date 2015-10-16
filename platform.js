@@ -13,7 +13,6 @@ function Platform() {
 	var self = this;
 
 	process.on('uncaughtException', function (error) {
-		console.error(error);
 		self.handleException(error);
 		process.exit(1);
 	});
