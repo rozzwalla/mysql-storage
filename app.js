@@ -13,6 +13,7 @@ var platform    = require('./platform'),
 platform.once('ready', function (options) {
 
 	//try catch to capture parsing error in JSON.parse
+
 	try {
 		parseFields = JSON.parse(options.fields);
 
