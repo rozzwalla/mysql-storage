@@ -92,19 +92,16 @@ platform.on('data', function (data) {
 					platform.handleException(error);
 				}
 				else {
-					platform.log({
-						message: 'Record Successfully saved to MySQL.',
+					platform.log(JSON.stringify({
+						title: 'Record Successfully saved to MySQL.',
 						result: result.toString()
-					});
+					}));
 				}
 			});
 		});
 	} else {
 		console.error('Invalid Data not in JSON Format for MySQL Plugin.', data);
-		platform.log({
-			message: 'Invalid Data not in JSON Format for MySQL Plugin.',
-			result: data
-		});
+		platform.handleException(new Error('Invalid Data not in JSON Format for MySQL Plugin. ' + data));
 	}
 });
 
@@ -149,7 +146,7 @@ platform.once('ready', function (options) {
 				console.error('Error connecting to MySQL.', err);
 				platform.handleException(err);
 			} else {
-				platform.log('Connected to MySQL.');
+				platform.log('MySQL Storage Initialized.');
 				platform.notifyReady();
 			}
 		});

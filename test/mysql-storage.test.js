@@ -12,7 +12,7 @@ var cp     = require('child_process'),
 	storage;
 
 describe('Storage', function () {
-	this.slow(10000);
+	this.slow(8000);
 
 	after('terminate child process', function () {
 		storage.kill('SIGKILL');
@@ -25,7 +25,7 @@ describe('Storage', function () {
 	});
 
 	describe('#handShake', function () {
-		it('should notify the parent process when ready within 5 seconds', function (done) {
+		it('should notify the parent process when ready within 8 seconds', function (done) {
 			this.timeout(8000);
 
 			storage.on('message', function (message) {
