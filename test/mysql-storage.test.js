@@ -15,7 +15,14 @@ describe('Storage', function () {
 	this.slow(8000);
 
 	after('terminate child process', function () {
-		storage.kill('SIGKILL');
+
+		storage.send({
+			type: 'close'
+		});
+
+		setTimeout(function () {
+			storage.kill('SIGKILL');
+		}, 4000);
 	});
 
 	describe('#spawn', function () {
