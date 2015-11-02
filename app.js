@@ -93,13 +93,14 @@ platform.on('data', function (data) {
 				}
 				else {
 					platform.log(JSON.stringify({
-						title: 'Record Successfully saved to MySQL.',
-						result: result.toString()
+						title: 'Record Successfully inserted to MySQL.',
+						data: result
 					}));
 				}
 			});
 		});
-	} else {
+	}
+	else {
 		console.error('Invalid Data not in JSON Format for MySQL Plugin.', data);
 		platform.handleException(new Error('Invalid Data not in JSON Format for MySQL Plugin. ' + data));
 	}
@@ -109,8 +110,15 @@ platform.on('data', function (data) {
  * Event to listen to in order to gracefully release all resources bound to this service.
  */
 platform.on('close', function () {
-	connection.destroy();
-	platform.notifyClose();
+	try {
+		connection.end(function (error) {
+			if (error) platform.handleException(error);
+			platform.notifyClose();
+		});
+	}
+	catch (error) {
+		console.error(error);
+	}
 });
 
 /*
@@ -120,11 +128,8 @@ platform.once('ready', function (options) {
 	parseFields = JSON.parse(options.fields);
 
 	async.forEachOf(parseFields, function (field, key, callback) {
-		console.log('Field', field);
-		console.log('Key', key);
-		if (_.isEmpty(field.source_field)) {
+		if (_.isEmpty(field.source_field))
 			callback(new Error('Source field is missing for ' + key + ' in MySQL Plugin'));
-		}
 		else if (field.data_type && (field.data_type !== 'String' &&
 			field.data_type !== 'Integer' && field.data_type !== 'Float' &&
 			field.data_type !== 'Boolean' && field.data_type !== 'DateTime')) {
@@ -153,7 +158,8 @@ platform.once('ready', function (options) {
 			if (err) {
 				console.error('Error connecting to MySQL.', err);
 				platform.handleException(err);
-			} else {
+			}
+			else {
 				platform.log('MySQL Storage Initialized.');
 				platform.notifyReady();
 			}
