@@ -13,7 +13,7 @@ Uses pg npm library
 
 **Process**
 
-1. Data would be written directly to the postgresql host specified
+1. Data would be written directly to the mysql host specified
 2. Storage plugin will only write data using plain SQL-Insert statement
 3. All errors will be logged and no data should be written
 4. Data will be parsed accordingly based on field configuration
