@@ -4,7 +4,6 @@ var _        = require('lodash'),
 	async    = require('async'),
 	mysql    = require('mysql'),
 	moment   = require('moment'),
-	isJSON   = require('is-json'),
 	platform = require('./platform'),
 	tableName, parseFields, connection;
 
@@ -12,7 +11,6 @@ var _        = require('lodash'),
  * Listen for the data event.
  */
 platform.on('data', function (data) {
-	if (isJSON(data, true)) {
 		var saveData = {};
 
 		async.forEachOf(parseFields, function (field, key, callback) {
@@ -23,10 +21,10 @@ platform.on('data', function (data) {
 				if (field.data_type) {
 					try {
 						if (field.data_type === 'String') {
-							if (isJSON(datum))
-								processedDatum = JSON.stringify(datum);
-							else
-								processedDatum = String(datum);
+								if (typeof datum !== 'object')
+									processedDatum = String(datum);
+								else
+									processedDatum = JSON.stringify(datum);
 						}
 						else if (field.data_type === 'Integer') {
 							var intData = parseInt(datum);
@@ -99,11 +97,6 @@ platform.on('data', function (data) {
 				}
 			});
 		});
-	}
-	else {
-		console.error('Invalid Data not in JSON Format for MySQL Plugin.', data);
-		platform.handleException(new Error('Invalid Data not in JSON Format for MySQL Plugin. ' + data));
-	}
 });
 
 /*
