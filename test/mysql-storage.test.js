@@ -1,18 +1,28 @@
-/*
- * Just a sample code to test the storage plugin.
- * Kindly write your own unit tests for your own plugin.
- */
 'use strict';
+
+const HOST     = 'reekoh-staging.cg1corueo9zh.us-east-1.rds.amazonaws.com',
+	  PORT     = 3306,
+	  USER     = 'reekoh',
+	  PASSWORD = 'rozzwalla',
+	  DATABASE = 'reekoh',
+	  TABLE    = 'reekoh_table';
 
 var cp     = require('child_process'),
 	assert = require('assert'),
 	storage;
 
 describe('Storage', function () {
-	this.slow(5000);
+	this.slow(8000);
 
 	after('terminate child process', function () {
-		storage.kill('SIGKILL');
+
+		storage.send({
+			type: 'close'
+		});
+
+		setTimeout(function () {
+			storage.kill('SIGKILL');
+		}, 4000);
 	});
 
 	describe('#spawn', function () {
@@ -22,8 +32,8 @@ describe('Storage', function () {
 	});
 
 	describe('#handShake', function () {
-		it('should notify the parent process when ready within 5 seconds', function (done) {
-			this.timeout(5000);
+		it('should notify the parent process when ready within 8 seconds', function (done) {
+			this.timeout(8000);
 
 			storage.on('message', function (message) {
 				if (message.type === 'ready')
@@ -33,14 +43,18 @@ describe('Storage', function () {
 			storage.send({
 				type: 'ready',
 				data: {
-					options :   {
-						host : 'reekoh-staging.cg1corueo9zh.us-east-1.rds.amazonaws.com',
-						port : 3306,
-						user : 'reekoh',
-						password : 'rozzwalla',
-						database   : 'reekoh',
-						fields : JSON.stringify({ string_type: {source_field:'name', data_type: 'String'}}),
-						table : 'reekoh_table'
+					options: {
+						host: HOST,
+						port: PORT,
+						user: USER,
+						password: PASSWORD,
+						database: DATABASE,
+						table: TABLE,
+						fields: JSON.stringify({
+							string_type: {
+								source_field: 'name', data_type: 'String'
+							}
+						})
 					}
 				}
 			}, function (error) {
