@@ -7,21 +7,21 @@
 
 MySQL Storage Plugin for the Reekoh IoT Platform.
 
-**Assumptions:**
+## Assumptions:
 
 1. Data would be in JSON format
 2. Data would be processed based on configuration format
 3. Conversions and formatting are done within Reekoh only minimal conversions are done in the plugin
 4. Field configuration is correctly done for the specified table
 
-**Process**
+## Process
 
 1. Data would be written directly to the mysql host specified
 2. Storage plugin will only write data using plain SQL-Insert statement
 3. All errors will be logged and no data should be written
 4. Data will be parsed accordingly based on field configuration
 
-**Field Configuration**
+## Field Configuration
 
 1. Input for this field is in JSON format {"(field_name)" : {"source_field" : "value", "data_type": "value", "format": "value"}}.
 2. field_name will be the name of the column in the mysql Table
@@ -33,7 +33,7 @@ MySQL Storage Plugin for the Reekoh IoT Platform.
    of mysql
 6. JSON Data is not supported as a data_type but you can save it if there is a field in MySQL
 
-```
+```javascript
 {
     co2_field      	 : {source_field:'co2', data_type: 'String'},
     temp_field     	 : {source_field:'temp', data_type: 'Integer'},
@@ -45,9 +45,9 @@ MySQL Storage Plugin for the Reekoh IoT Platform.
 }
 ```
 
-Sample Data:
+### Sample Data:
 
-```
+```javascript
 {
   co2: '11%',
   temp: 23,
@@ -59,9 +59,8 @@ Sample Data:
 }
 ```
 
-MySQL Fields:
+### MySQL Fields:
 
-```
 Type Field mapping |
 -------------------|
 _id                |
@@ -72,5 +71,3 @@ metadata_field     |
 reading_time_field |
 random_data_field  |
 is_normal_field    |
-
-```
