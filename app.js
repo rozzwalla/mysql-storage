@@ -125,7 +125,16 @@ platform.on('close', function () {
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
-	parseFields = JSON.parse(options.fields);
+	try {
+		parseFields = JSON.parse(options.fields);
+	}
+	catch (ex) {
+		platform.handleException(new Error('Invalid option parameter: fields. Must be a valid JSON String.'));
+
+		return setTimeout(function () {
+			process.exit(1);
+		}, 2000);
+	}
 
 	async.forEachOf(parseFields, function (field, key, callback) {
 		if (_.isEmpty(field.source_field))
