@@ -30,7 +30,7 @@ Uses pg npm library
    of mysql
 6. JSON Data is not supported as a data_type but you can save it if there is a field in MySQL
 
-
+```
 {
     co2_field      	 : {source_field:'co2', data_type: 'String'},
     temp_field     	 : {source_field:'temp', data_type: 'Integer'},
@@ -43,6 +43,7 @@ Uses pg npm library
 ```
 
 Sample Data:
+
 ```
 {
   co2: '11%',
@@ -55,8 +56,9 @@ Sample Data:
 }
 ```
 
-Elastic Search Fields:
+MySQL Fields:
 
+```
 Type Field mapping |
 -------------------|
 _id                |
@@ -68,3 +70,4 @@ reading_time_field |
 random_data_field  |
 is_normal_field    |
 
+```
