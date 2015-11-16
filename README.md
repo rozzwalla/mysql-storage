@@ -2,8 +2,6 @@
 
 MySQL Storage Plugin for the Reekoh IoT Platform.
 
-Uses pg npm library
-
 **Assumptions:**
 
 1. Data would be in JSON format
