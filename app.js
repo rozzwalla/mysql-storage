@@ -21,12 +21,10 @@ platform.on('data', function (data) {
 			if (field.data_type) {
 				try {
 					if (field.data_type === 'String') {
-						try {
+						if (_.isPlainObject(datum))
 							processedDatum = JSON.stringify(datum);
-						}
-						catch (e) {
-							processedDatum = String(datum);
-						}
+						else
+							processedDatum = ''.concat(datum);
 					}
 					else if (field.data_type === 'Integer') {
 						var intData = parseInt(datum);
