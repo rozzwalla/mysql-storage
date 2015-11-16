@@ -11,92 +11,94 @@ var _        = require('lodash'),
  * Listen for the data event.
  */
 platform.on('data', function (data) {
-		var saveData = {};
+	var saveData = {};
 
-		async.forEachOf(parseFields, function (field, key, callback) {
-			var datum = data[field.source_field],
-				processedDatum;
+	async.forEachOf(parseFields, function (field, key, callback) {
+		var datum = data[field.source_field],
+			processedDatum;
 
-			if (datum !== undefined && datum !== null) {
-				if (field.data_type) {
-					try {
-						if (field.data_type === 'String') {
-								if (typeof datum !== 'object')
-									processedDatum = String(datum);
-								else
-									processedDatum = JSON.stringify(datum);
+		if (datum !== undefined && datum !== null) {
+			if (field.data_type) {
+				try {
+					if (field.data_type === 'String') {
+						try {
+							processedDatum = JSON.stringify(datum);
 						}
-						else if (field.data_type === 'Integer') {
-							var intData = parseInt(datum);
-
-							if (isNaN(intData))
-								processedDatum = datum; //store original value
-							else
-								processedDatum = intData;
-						}
-						else if (field.data_type === 'Float') {
-							var floatData = parseFloat(datum);
-
-							if (isNaN(floatData))
-								processedDatum = datum; //store original value
-							else
-								processedDatum = floatData;
-						}
-						else if (field.data_type === 'Boolean') {
-							var type = typeof datum;
-
-							if ((type === 'string' && datum.toLocaleLowerCase() === 'true') ||
-								(type === 'number' && datum === 1 )) {
-								processedDatum = true;
-							}
-							else if ((type === 'string' && datum.toLocaleLowerCase() === 'false') ||
-								(type === 'number' && datum === 0 )) {
-								processedDatum = false;
-							}
-							else
-								processedDatum = datum;
-						}
-						else if (field.data_type === 'DateTime') {
-
-							var dtm = new Date(datum);
-							if (!isNaN(dtm.getTime())) {
-								if (field.format !== undefined)
-									processedDatum = moment(dtm).format(field.format);
-								else
-									processedDatum = dtm;
-							}
-							else
-								processedDatum = datum;
+						catch (e) {
+							processedDatum = String(datum);
 						}
 					}
-					catch (e) {
-						console.error('Data conversion error in MySQL.', e);
-						platform.handleException(e);
-						processedDatum = datum;
+					else if (field.data_type === 'Integer') {
+						var intData = parseInt(datum);
+
+						if (isNaN(intData))
+							processedDatum = datum; //store original value
+						else
+							processedDatum = intData;
+					}
+					else if (field.data_type === 'Float') {
+						var floatData = parseFloat(datum);
+
+						if (isNaN(floatData))
+							processedDatum = datum; //store original value
+						else
+							processedDatum = floatData;
+					}
+					else if (field.data_type === 'Boolean') {
+						var type = typeof datum;
+
+						if ((type === 'string' && datum.toLocaleLowerCase() === 'true') ||
+							(type === 'number' && datum === 1 )) {
+							processedDatum = true;
+						}
+						else if ((type === 'string' && datum.toLocaleLowerCase() === 'false') ||
+							(type === 'number' && datum === 0 )) {
+							processedDatum = false;
+						}
+						else
+							processedDatum = datum;
+					}
+					else if (field.data_type === 'DateTime') {
+
+						var dtm = new Date(datum);
+						if (!isNaN(dtm.getTime())) {
+							if (field.format !== undefined)
+								processedDatum = moment(dtm).format(field.format);
+							else
+								processedDatum = dtm;
+						}
+						else
+							processedDatum = datum;
 					}
 				}
-				else
+				catch (e) {
+					console.error('Data conversion error in MySQL.', e);
+					platform.handleException(e);
 					processedDatum = datum;
+				}
 			}
 			else
-				processedDatum = null;
+				processedDatum = datum;
+		}
+		else
+			processedDatum = null;
 
-			saveData[key] = processedDatum;
-			callback();
-		}, function () {
-			connection.query('INSERT INTO ' + tableName + ' SET ?', saveData, function (error, result) {
-				if (error) {
-					console.error('Failed to save record in MySQL.', error);
-					platform.handleException(error);
-				}
-				else {
-					platform.log(JSON.stringify({
-						title: 'Record Successfully inserted to MySQL.',
-						data: result
-					}));
-				}
-			});
+		saveData[key] = processedDatum;
+		callback();
+	}, function () {
+		connection.query('INSERT INTO ' + tableName + ' SET ?', saveData, function (error, result) {
+			if (error) {
+				console.error('Failed to save record in MySQL.', error);
+				platform.handleException(error);
+			}
+			else {
+				platform.log(JSON.stringify({
+					title: 'Record Successfully inserted to MySQL.',
+					data: result
+				}));
+			}
 		});
+	});
 });
 
 /*
@@ -106,13 +108,13 @@ platform.on('close', function () {
 	var domain = require('domain');
 	var d = domain.create();
 
-	d.once('error', function(error) {
+	d.once('error', function (error) {
 		console.error(error);
 		platform.handleException(error);
 		platform.notifyClose();
 	});
 
-	d.run(function() {
+	d.run(function () {
 		connection.end(function (error) {
 			if (error) platform.handleException(error);
 			platform.notifyClose();
