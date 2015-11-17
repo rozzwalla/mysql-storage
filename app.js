@@ -2,7 +2,6 @@
 
 var _        = require('lodash'),
 	async    = require('async'),
-	mysql    = require('mysql'),
 	moment   = require('moment'),
 	platform = require('./platform'),
 	tableName, parseFields, connection;
@@ -153,6 +152,7 @@ platform.once('ready', function (options) {
 			return platform.handleException(error);
 		}
 
+		var mysql = require('mysql');
 		tableName = options.table;
 
 		connection = mysql.createConnection({
