@@ -1,6 +1,6 @@
 'use strict';
 
-const HOST     = 'reekoh-staging.cg1corueo9zh.us-east-1.rds.amazonaws.com',
+const HOST     = 'reekoh-mysql.cg1corueo9zh.us-east-1.rds.amazonaws.com',
 	  PORT     = 3306,
 	  USER     = 'reekoh',
 	  PASSWORD = 'rozzwalla',
