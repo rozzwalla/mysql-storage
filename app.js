@@ -167,6 +167,10 @@ platform.once('ready', function (options) {
 			if (err) {
 				console.error('Error connecting to MySQL.', err);
 				platform.handleException(err);
+
+				return setTimeout(function () {
+					process.exit(1);
+				}, 2000);
 			}
 			else {
 				platform.log('MySQL Storage Initialized.');
