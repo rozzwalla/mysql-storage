@@ -1,9 +1,9 @@
 'use strict';
 
-var _        = require('lodash'),
-	async    = require('async'),
-	moment   = require('moment'),
-	platform = require('./platform'),
+var async         = require('async'),
+	moment        = require('moment'),
+	platform      = require('./platform'),
+	isPlainObject = require('lodash.isplainobject'),
 	tableName, parseFields, connection;
 
 /*
@@ -20,7 +20,7 @@ platform.on('data', function (data) {
 			if (field.data_type) {
 				try {
 					if (field.data_type === 'String') {
-						if (_.isPlainObject(datum))
+						if (isPlainObject(datum))
 							processedDatum = JSON.stringify(datum);
 						else
 							processedDatum = ''.concat(datum);
@@ -109,6 +109,7 @@ platform.on('close', function () {
 		console.error(error);
 		platform.handleException(error);
 		platform.notifyClose();
+		d.exit();
 	});
 
 	d.run(function () {
@@ -124,6 +125,8 @@ platform.on('close', function () {
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
+	var isEmpty = require('lodash.isempty');
+
 	try {
 		parseFields = JSON.parse(options.fields);
 	}
@@ -136,7 +139,7 @@ platform.once('ready', function (options) {
 	}
 
 	async.forEachOf(parseFields, function (field, key, callback) {
-		if (_.isEmpty(field.source_field))
+		if (isEmpty(field.source_field))
 			callback(new Error('Source field is missing for ' + key + ' in MySQL Plugin'));
 		else if (field.data_type && (field.data_type !== 'String' &&
 			field.data_type !== 'Integer' && field.data_type !== 'Float' &&
