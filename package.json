@@ -1,7 +1,7 @@
 {
   "name": "mysql-storage",
   "description": "MySQL Storage Plugin for Reekoh IoT Platform. Enables a Reekoh Instance to integrate with MySQL RDMS to syncrhonize device data.",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "author": "Reekoh, Inc.",
   "main": "app.js",
   "scripts": {
@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "async": "^1.4.2",
-    "is-json": "^1.2.5",
-    "lodash": "^3.10.1",
+    "lodash.isempty": "^3.0.4",
+    "lodash.isplainobject": "^3.2.0",
     "moment": "^2.10.6",
     "mysql": "^2.9.0"
   },

@@ -1,17 +1,17 @@
 'use strict';
 
-const HOST     = 'reekoh-staging.cg1corueo9zh.us-east-1.rds.amazonaws.com',
+const HOST     = 'reekoh-mysql.cg1corueo9zh.us-east-1.rds.amazonaws.com',
 	  PORT     = 3306,
 	  USER     = 'reekoh',
 	  PASSWORD = 'rozzwalla',
 	  DATABASE = 'reekoh',
 	  TABLE    = 'reekoh_table',
-	  _ID  = new Date().getTime();
+	  _ID      = new Date().getTime();
 
 var cp     = require('child_process'),
 	assert = require('assert'),
-	should   = require('should'),
-	moment   = require('moment'),
+	should = require('should'),
+	moment = require('moment'),
 	storage;
 
 var record = {
@@ -65,14 +65,18 @@ describe('Storage', function () {
 						database: DATABASE,
 						table: TABLE,
 						fields: JSON.stringify({
-							_id				   : {source_field:'_id', data_type: 'Integer'},
-							co2_field      	   : {source_field:'co2', data_type: 'String'},
-							temp_field     	   : {source_field:'temp', data_type: 'Integer'},
-							quality_field  	   : {source_field:'quality', data_type: 'Float'},
-							reading_time_field : {source_field:'reading_time', data_type: 'DateTime', format: 'YYYY-MM-DDTHH:mm:ss'},
-							metadata_field 	   : {source_field:'metadata', data_type: 'String'},
-							random_data_field  : {source_field:'random_data'},
-							is_normal_field    : {source_field:'is_normal', data_type: 'Boolean'}
+							_id: {source_field: '_id', data_type: 'Integer'},
+							co2_field: {source_field: 'co2', data_type: 'String'},
+							temp_field: {source_field: 'temp', data_type: 'Integer'},
+							quality_field: {source_field: 'quality', data_type: 'Float'},
+							reading_time_field: {
+								source_field: 'reading_time',
+								data_type: 'DateTime',
+								format: 'YYYY-MM-DDTHH:mm:ss'
+							},
+							metadata_field: {source_field: 'metadata', data_type: 'String'},
+							random_data_field: {source_field: 'random_data'},
+							is_normal_field: {source_field: 'is_normal', data_type: 'Boolean'}
 						})
 					}
 				}
@@ -106,16 +110,16 @@ describe('Storage', function () {
 			});
 
 			connection.connect(function (err) {
-				connection.query('SELECT * FROM ' + TABLE + ' WHERE _id = ' + _ID, function (error, result, fields) {
+				assert.ifError(err);
 
+				connection.query('SELECT * FROM ' + TABLE + ' WHERE _id = ' + _ID, function (error, result, fields) {
 					should.exist(result[0]);
 					var resp = result[0];
 
 					//cleanup for JSON stored string
 					var cleanMetadata = resp.metadata_field.replace(/\\"/g, '"');
-					var str  = JSON.stringify(record.metadata);
+					var str = JSON.stringify(record.metadata);
 					var str2 = JSON.stringify(cleanMetadata);
-
 
 					should.equal(record.co2, resp.co2_field, 'Data validation failed. Field: co2');
 					should.equal(record.temp, resp.temp_field, 'Data validation failed. Field: temp');
